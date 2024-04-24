@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         灰暗之镜 终端版
 // @namespace    http://tampermonkey.net/
-// @version      1.4.0
+// @version      1.4.3
 // @license      GNU AGPLv3
 // @description  这个插件的初衷是用来针对SCP-CN-3100的。至于被波及的家伙们，由衷表示活该。
 // @author       MentalImageryMirage，即是心象蜃气楼。
@@ -473,14 +473,14 @@
         @keyframes open{
             0%{transform: rotateZ(90deg);border: 5px groove;opacity:0.5;}
             10%{transform: rotateZ(0deg);width:80px;}
-            50%{transform: rotateZ(0deg);width:550px;height:65px;border-radius: 0px;}
-            100%{transform: rotateZ(0deg);width:550px;height:450px;border: 5px outset whitesmoke;opacity:1;border-radius: 5px;}
+            50%{transform: rotateZ(0deg);width:550px;height:65px;}
+            100%{transform: rotateZ(0deg);width:550px;height:450px;border: 5px outset whitesmoke;opacity:1;}
         }
         @keyframes close{
             0%{transform: rotateZ(0deg);width:550px;height:450px;border: 5px outset whitesmoke;opacity:1;}
-            50%{transform: rotateZ(0deg);width:550px;height:65px;border-radius: 5px;}
-            90%{transform: rotateZ(0deg);width:65px;border-radius: 2.5px;}
-            100%{transform: rotateZ(90deg);border: 5px groove;opacity:0.5;border-radius: 0px;}
+            50%{transform: rotateZ(0deg);width:550px;height:65px;}
+            90%{transform: rotateZ(0deg);width:65px;}
+            100%{transform: rotateZ(90deg);border: 5px groove;opacity:0.5;}
         }
         </style>
         `
@@ -508,14 +508,14 @@
                 @keyframes open{
                     0%{transform: rotateZ(90deg);border: 5px groove;opacity:0.5;}
                     10%{transform: rotateZ(0deg);width:80px;}
-                    50%{transform: rotateZ(0deg);width:80vw;height:65px;border-radius: 0px;}
-                    100%{transform: rotateZ(0deg);width:90vw;height:50vh;border: 5px outset whitesmoke;opacity:1;border-radius: 5px;}
+                    50%{transform: rotateZ(0deg);width:80vw;height:65px;}
+                    100%{transform: rotateZ(0deg);width:90vw;height:50vh;border: 5px outset whitesmoke;opacity:1;}
                 }
                 @keyframes close{
                     0%{transform: rotateZ(0deg);width:90vw;height:50vh;border: 5px outset whitesmoke;opacity:1;}
-                    50%{transform: rotateZ(0deg);width:80vw;height:65px;border-radius: 0px;}
-                    90%{transform: rotateZ(0deg);width:65px;border-radius: 2.5px;}
-                    100%{transform: rotateZ(90deg);border: 5px groove;opacity:0.5;border-radius: 5px}
+                    50%{transform: rotateZ(0deg);width:80vw;height:65px;}
+                    90%{transform: rotateZ(0deg);width:65px;}
+                    100%{transform: rotateZ(90deg);border: 5px groove;opacity:0.5;}
                 }
                 </style>
             `
@@ -525,14 +525,14 @@
                 @keyframes open{
                     0%{transform: rotateZ(90deg);border: 5px groove;opacity:0.5;}
                     10%{transform: rotateZ(0deg);width:80px;}
-                    50%{transform: rotateZ(0deg);width:450px;height:65px;border-radius: 0px;}
-                    100%{transform: rotateZ(0deg);width:450px;height:400px;border: 5px outset whitesmoke;opacity:1;border-radius: 5px;}
+                    50%{transform: rotateZ(0deg);width:450px;height:65px;}
+                    100%{transform: rotateZ(0deg);width:450px;height:400px;border: 5px outset whitesmoke;opacity:1;}
                 }
                 @keyframes close{
                     0%{transform: rotateZ(0deg);width:450px;height:400px;border: 5px outset whitesmoke;opacity:1;}
-                    50%{transform: rotateZ(0deg);width:450px;height:65px;border-radius: 0px;}
-                    90%{transform: rotateZ(0deg);width:65px;border-radius: 2.5px;}
-                    100%{transform: rotateZ(90deg);border: 5px groove;opacity:0.5;border-radius: 5px;}
+                    50%{transform: rotateZ(0deg);width:450px;height:65px;}
+                    90%{transform: rotateZ(0deg);width:65px;}
+                    100%{transform: rotateZ(90deg);border: 5px groove;opacity:0.5;}
                 }
                 </style>
             `
@@ -1222,7 +1222,7 @@
                                 clearInterval(judgeCheck)
                                 that.judge()
                             }
-                            else if(checkLimit > 99){
+                            else if(checkLimit > 30){
                                 console.warn(that.title+'检测到K值更新死循环，停止动作。')
                                 that.messageLog('检测到K值更新死循环，停止动作。</br>请刷新页面重新操作。')
                                 for(var index = 0;index<that.listName.length;index++){
@@ -1334,9 +1334,11 @@
                 var tempHTML = parser.parseFromString(res.body,"text/html")
                 // console.log(tempHTML)
                 var tempTr = tempHTML.querySelectorAll('tr')
+                let checkFlag = true
                 for(var index = 0;index<tempTr.length;index++){
                     // console.log(index)
                     if(tempTr[index].querySelectorAll('td')[0].querySelector('b').innerHTML == '活跃等级（Karma）'){
+                        checkFlag = false
                         var tempString = tempTr[index].querySelectorAll('td')[1].innerHTML.toString()
                         // var karma =
                         if(tempString[9] == "无"){
@@ -1373,6 +1375,10 @@
                         // listName[id][4] = tempString[9]
                         // console.log(karma)
                     }
+                }
+                if(checkFlag){
+                    that.listName[id][4] = 1
+                    that.listener ++
                 }
                 // var karma = tempHTML.querySelectorAll('tr')[2].querySelectorAll('td')[1].innerHTML.toString()
                 // console.log(karma)
@@ -1597,7 +1603,7 @@
             // }
             // console.log('周穆王协议异常指数计算结果：' + abnormalCompute)
 
-            if(this.result['sumNum']>200){
+            if(this.result['sumNum']>250){
                 console.log('检测到极端曝光目标，启用混沌理论协议。' )
                 this.messageLog('<span style="color:red">检测到极端曝光目标，启用混沌理论协议。</span>')
                 abnormalCompute = (abnormalCompute/2).toFixed(2)
